@@ -5,6 +5,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 import { OctagonAlertIcon } from 'lucide-react'
 import React, { useState } from 'react'
+import { FaGoogle, FaGithub } from 'react-icons/fa';
 
 import { authClient } from '@/lib/auth-client'
 import { Button } from '@/components/ui/button'
@@ -22,6 +23,7 @@ import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 
 
+
 const formSchema = z.object({
   name: z.string().min(1, 'Name is required'),
   email: z.string().email(),
@@ -34,7 +36,7 @@ const formSchema = z.object({
 
 const SignUpView = () => {
 
-  const router = useRouter();
+  const router = useRouter()
   const [error, setError] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
 
@@ -56,12 +58,37 @@ const SignUpView = () => {
       name: data.name,
       email: data.email,
       password: data.password,
-      
+      callbackURL: '/'
+
     },
       {
         onSuccess: () => {
           setLoading(false)
-          router.push('/')
+        
+        },
+        onError: ({ error }) => {
+          setLoading(false)
+          console.log('Error signing in:', error)
+          setError(error?.message)
+        }
+      })
+  }
+
+
+  const onSocial = (provider : "google"| "github") => {
+    setError(null)
+    setLoading(true)
+
+    authClient.signIn.social({
+      provider: provider,
+      callbackURL: '/'
+
+    },
+      {
+        onSuccess: () => {
+          setLoading(false)
+          router.push("/")
+          
         },
         onError: ({ error }) => {
           setLoading(false)
@@ -166,8 +193,12 @@ const SignUpView = () => {
                 </div>
 
                 <div className='grid grid-cols-2 gap-4'>
-                  <Button disabled={loading} type='button' className='w-full' variant="outline">Google</Button>
-                  <Button disabled={loading} type='button' className='w-full' variant="outline">GitHub</Button>
+                  <Button onClick={() => {
+                    onSocial("google")
+                  }} disabled={loading} type='button' className='w-full' variant="outline"><FaGoogle/></Button>
+                  <Button onClick={() => {
+                    onSocial("github")
+                  }} disabled={loading} type='button' className='w-full' variant="outline"><FaGithub/></Button>
                 </div>
                 <div className='text-center text-sm '>
                   Have an account?{' '}
