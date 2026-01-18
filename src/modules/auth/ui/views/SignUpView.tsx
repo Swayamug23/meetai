@@ -215,7 +215,7 @@ const SignUpView = () => {
 
 
 
-          <div className='bg-radial p-2 from-green-500 to-green-900 relative hidden md:flex flex-col gap-y-4 items-center justify-center'>
+          <div className='bg-radial p-2 from-sidebar-accent to-sidebar relative hidden md:flex flex-col gap-y-4 items-center justify-center'>
 
             <img src="./logo.svg" alt="image" className='h-[90px] w-[90px]' />
             <p className='text-2xl font-bold text-white'>
